@@ -30,3 +30,6 @@ app/build/
 .kotlin/
 .claude/
 .mvn/
+
+# Internal documentation (not for public repo)
+ReadMe/
