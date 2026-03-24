@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Backup rules for Android 11 and below.
+    GDPR / COPPA: exclude all stores that hold children's PII or behavioural data.
+    Docs: https://developer.android.com/guide/topics/data/autobackup
+-->
+<full-backup-content>
+    <!-- Child's name (PII) — must NOT leave the device via cloud backup -->
+    <exclude domain="file" path="datastore/user_prefs.preferences_pb"/>
+
+    <!-- Gamification state (behavioural profile of a child) -->
+    <exclude domain="file" path="datastore/gamification_prefs.preferences_pb"/>
+
+    <!-- Challenge progress (behavioural profile of a child) -->
+    <exclude domain="file" path="datastore/challenge_prefs.preferences_pb"/>
+
+    <!-- Room database containing toy names, prices, photos (PII adjacent) -->
+    <exclude domain="database" path="toy_db"/>
+    <exclude domain="database" path="toy_db-shm"/>
+    <exclude domain="database" path="toy_db-wal"/>
+
+    <!-- Photo files stored by camera / gallery picker -->
+    <exclude domain="file" path="Pictures"/>
+    <exclude domain="file" path="Toy_Images"/>
+
+    <!-- Theme preference is safe to back up — no PII -->
+</full-backup-content>
