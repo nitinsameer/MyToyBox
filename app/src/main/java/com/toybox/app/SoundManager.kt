@@ -23,10 +23,14 @@ class SoundManager(private val context: Context) {
     private fun play(volume: Float) {
         try {
             player?.release()
+            player = null
             val uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
             player = MediaPlayer.create(context, uri)?.apply {
                 setVolume(volume, volume)
-                setOnCompletionListener { it.release() }
+                setOnCompletionListener {
+                    it.release()
+                    player = null
+                }
                 start()
             }
         } catch (_: Exception) {

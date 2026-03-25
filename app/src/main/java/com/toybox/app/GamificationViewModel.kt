@@ -52,8 +52,9 @@ class GamificationViewModel(app: Application) : AndroidViewModel(app) {
                 _completedChallenge.value = done
             }
 
-            // 3. Surprise (20% chance)
-            if (Random.nextFloat() < 0.20f) {
+            // 3. Surprise — always if no badge/challenge fired, else 20% bonus chance
+            val noOtherPopup = earned == null && completedList.isEmpty()
+            if (noOtherPopup || Random.nextFloat() < 0.20f) {
                 val reward = SurpriseReward.values().random()
                 if (reward.bonusPoints > 0) gamRepo.addPoints(reward.bonusPoints)
                 _surprise.value = reward

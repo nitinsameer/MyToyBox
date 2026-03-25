@@ -203,7 +203,7 @@ private fun HomeHeader(
                     }
 
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
                         verticalAlignment     = Alignment.CenterVertically
                     ) {
                         // Settings
@@ -448,45 +448,6 @@ private fun QuickActions(onAddToy: () -> Unit, onMyToys: () -> Unit, onRewards: 
     }
 }
 
-// ── Legacy button (kept for EmptyState / SetupScreen compatibility) ───────────
-
-@Composable
-fun KidActionButton(
-    label: String,
-    containerColor: Color,
-    textColor: Color,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    var pressed by remember { mutableStateOf(false) }
-    val scale by animateFloatAsState(
-        targetValue   = if (pressed) 0.95f else 1f,
-        animationSpec = spring(Spring.DampingRatioMediumBouncy, Spring.StiffnessHigh),
-        label         = "kid_btn_scale"
-    )
-    Button(
-        onClick = {
-            pressed = true
-            onClick()
-        },
-        modifier  = modifier
-            .fillMaxWidth()
-            .height(56.dp)
-            .scale(scale),
-        shape     = RoundedCornerShape(20.dp),
-        colors    = ButtonDefaults.buttonColors(containerColor = containerColor),
-        elevation = ButtonDefaults.buttonElevation(defaultElevation = 2.dp)
-    ) {
-        Text(text = label, fontSize = 15.sp, fontWeight = FontWeight.Black, color = textColor)
-    }
-    LaunchedEffect(pressed) {
-        if (pressed) {
-            kotlinx.coroutines.delay(150)
-            pressed = false
-        }
-    }
-}
-
 // ── Fun Dashboard ─────────────────────────────────────────────────────────────
 
 @Composable
@@ -606,13 +567,16 @@ fun DashboardCard(
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier  = modifier.width(140.dp),
+        modifier  = modifier.width(140.dp).height(120.dp),
         shape     = RoundedCornerShape(18.dp),
         colors    = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         border    = BorderStroke(1.5.dp, tint.copy(alpha = 0.3f)),
         elevation = CardDefaults.cardElevation(2.dp)
     ) {
-        Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Column(
+            Modifier.padding(14.dp).fillMaxHeight(),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
             Text(emoji, fontSize = 24.sp)
             Text(
                 value,
@@ -710,27 +674,6 @@ private fun EmptyState(onAddToy: () -> Unit) {
                     shadowDepth = 4.dp
                 )
             }
-        }
-    }
-}
-
-// ── Stat card (backward compat) ───────────────────────────────────────────────
-
-@Composable
-fun StatCard(value: String, label: String, modifier: Modifier = Modifier) {
-    Card(
-        modifier = modifier,
-        shape    = RoundedCornerShape(14.dp),
-        colors   = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
-        ),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
-    ) {
-        Column(Modifier.padding(10.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(value, fontSize = 16.sp, fontWeight = FontWeight.Black,
-                color = MaterialTheme.colorScheme.primary)
-            Text(label.uppercase(), fontSize = 9.sp, fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurfaceVariant, letterSpacing = 0.06.sp)
         }
     }
 }

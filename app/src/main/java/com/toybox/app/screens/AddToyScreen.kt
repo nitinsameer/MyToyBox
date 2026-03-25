@@ -367,7 +367,7 @@ private fun FormStep(
                 AsyncImage(
                     model = photoUri,
                     contentDescription = null,
-                    contentScale = ContentScale.Crop,
+                    contentScale = ContentScale.Fit,
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(RoundedCornerShape(18.dp))

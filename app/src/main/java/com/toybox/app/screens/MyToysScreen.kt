@@ -20,6 +20,8 @@ import androidx.compose.material.icons.filled.ViewList
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
@@ -375,7 +377,7 @@ private fun ShelfToyCard(
                     AsyncImage(
                         model              = buildImageRequest(context, toy.photoUri),
                         contentDescription = toy.name,
-                        contentScale       = ContentScale.Crop,
+                        contentScale       = ContentScale.Fit,
                         modifier           = Modifier
                             .fillMaxSize()
                             .clip(RoundedCornerShape(topStart = 18.dp, topEnd = 18.dp))
@@ -451,11 +453,34 @@ fun ToyGridCard(
 ) {
     val context = LocalContext.current
     var pressed by remember { mutableStateOf(false) }
+    var showFullScreen by remember { mutableStateOf(false) }
     val scale by animateFloatAsState(
         targetValue   = if (pressed) 0.96f else 1f,
         animationSpec = spring(Spring.DampingRatioMediumBouncy),
         label         = "grid_scale"
     )
+
+    if (showFullScreen && toy.photoUri.isNotEmpty()) {
+        Dialog(
+            onDismissRequest = { showFullScreen = false },
+            properties = DialogProperties(usePlatformDefaultWidth = false)
+        ) {
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .background(Color.Black)
+                    .clickable { showFullScreen = false },
+                contentAlignment = Alignment.Center
+            ) {
+                AsyncImage(
+                    model              = buildImageRequest(context, toy.photoUri),
+                    contentDescription = toy.name,
+                    contentScale       = ContentScale.Fit,
+                    modifier           = Modifier.fillMaxWidth()
+                )
+            }
+        }
+    }
 
     Card(
         modifier  = modifier.fillMaxWidth().scale(scale),
@@ -470,14 +495,15 @@ fun ToyGridCard(
                 Modifier
                     .fillMaxWidth()
                     .height(120.dp)
-                    .background(catBg),
+                    .background(catBg)
+                    .then(if (toy.photoUri.isNotEmpty()) Modifier.clickable { showFullScreen = true } else Modifier),
                 contentAlignment = Alignment.Center
             ) {
                 if (toy.photoUri.isNotEmpty()) {
                     AsyncImage(
                         model              = buildImageRequest(context, toy.photoUri),
                         contentDescription = toy.name,
-                        contentScale       = ContentScale.Crop,
+                        contentScale       = ContentScale.Fit,
                         modifier           = Modifier
                             .fillMaxSize()
                             .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
